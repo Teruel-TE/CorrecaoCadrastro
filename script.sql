@@ -1,11 +1,12 @@
-sistema_musicaalbunsCREATE DATABASE sistema_musica;
+
+CREATE DATABASE sistema_musica;
 USE sistema_musica;
 
 CREATE TABLE artistas (
-id INT AUTO_INCREMENT PRIMARY KEY,
-nome VARCHAR(100) NOT NULL,
-genero VARCHAR(50) NOT NULL,
-pais VARCHAR(50) NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    genero VARCHAR(50) NOT NULL,
+    pais VARCHAR(50) NOT NULL
 );
 
 INSERT INTO artistas (nome, genero, pais) VALUES
@@ -13,13 +14,14 @@ INSERT INTO artistas (nome, genero, pais) VALUES
 ('Coldplay', 'Rock Alternativo', 'Reino Unido'),
 ('Drake', 'Hip Hop', 'Canadá');
 
-
 CREATE TABLE albuns (
-id INT AUTO_INCREMENT PRIMARY KEY,
-titulo VARCHAR(100) NOT NULL,
-ano_lancamento INT NOT NULL,
-artista_id INT NOT NULL,
-FOREIGN KEY (artista_id) REFERENCES artistas(id)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    ano_lancamento INT NOT NULL,
+    artista_id INT NOT NULL,
+    FOREIGN KEY (artista_id)
+        REFERENCES artistas(id)
+        ON DELETE CASCADE
 );
 
 INSERT INTO albuns (titulo, ano_lancamento, artista_id) VALUES
@@ -28,12 +30,15 @@ INSERT INTO albuns (titulo, ano_lancamento, artista_id) VALUES
 ('Certified Lover Boy', 2021, 3);
 
 CREATE TABLE musicas (
-id INT AUTO_INCREMENT PRIMARY KEY,
-titulo VARCHAR(100) NOT NULL,
-duracao VARCHAR(10) NOT NULL,
-album_id INT NOT NULL,
-FOREIGN KEY (album_id) REFERENCES albuns(id)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    duracao VARCHAR(10) NOT NULL,
+    album_id INT NOT NULL,
+    FOREIGN KEY (album_id)
+        REFERENCES albuns(id)
+        ON DELETE CASCADE
 );
+
 INSERT INTO musicas (titulo, duracao, album_id) VALUES
 ('Envolver', '3:13', 1),
 ('Girl from Rio', '3:14', 1),
@@ -42,8 +47,12 @@ INSERT INTO musicas (titulo, duracao, album_id) VALUES
 ('Way 2 Sexy', '4:17', 3),
 ('Girls Want Girls', '3:42', 3);
 
-SHOW TABLES;
-
 SELECT * FROM artistas;
 SELECT * FROM albuns;
 SELECT * FROM musicas;
+
+SELECT artistas.nome, musicas.titulo FROM artistas JOIN albuns
+ON artistas.id = albuns.artista_id JOIN musicas
+ON musicas.album_id = albuns.id
+ORDER BY artistas.nome
+WHERE artista_id = ?
